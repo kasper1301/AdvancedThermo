@@ -1,5 +1,7 @@
-dewPoints    = importdata('dewPoints.csv');
-bubblePoints = importdata('bubblePoints.csv');
+path(genpath('~/.matlab'),path)
+
+dewPoints    = importdata('../data/dewPoints.csv');
+bubblePoints = importdata('../data/bubblePoints.csv');
 
 % Convert to SI-units
 dewP = dewPoints(:,1)*6895; % [Pa]
@@ -26,6 +28,4 @@ xlabel('$V\quad\left[\SI{}{\cubic\meter}\right]$')
 ylabel('$T\quad\left[\SI{}{\kelvin}\right]$')
 matlab2tikz('../fig/TVexperimental.tex','parseStrings',false)
 
-xlabel('V [m^3]')
-ylabel('T [K]')
-saveas(gcf, '../fig/TVexperimental', 'pdf')
+exit
