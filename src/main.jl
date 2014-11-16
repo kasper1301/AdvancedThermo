@@ -37,8 +37,8 @@ resultV = {Float64[]}                                # Array for storing volumes
 resultX = {{Float64[]} for i in x}              # Arrays for storing vapor state
 
 trace   = 1                                                       # Trace number
-dV      = 1.0001        # The volume is updated by multiplication/division by dV
-dT      = 0.1          # The temperature is update by addition/subtraction of dT
+dV      = 1.0005        # The volume is updated by multiplication/division by dV
+dT      = 3.0          # The temperature is update by addition/subtraction of dT
 
 while true
     try
@@ -64,36 +64,13 @@ while true
     end
 end
 
-# Sort the volumes
-for v in resultV
-    sort!(v)
-end
 
 # Prepare array for storing the entropy
 resultS = deepcopy(resultV)
 
-# Create phase diagram and store entropy calculations
-fig = figure()
+# entropy calculations
 for i in 1:length(resultV)
     if length(resultV[i]) > 0
-        Vmax = maximum(resultV[i])
-        idx  = indmax(resultV[i])
-        # Check if Vmax is a bubble or a dew point
-        if resultX[1][i][idx]/Vmax > 0.5
-            # Bubble point
-            semilogx(Vmax,resultT[i][idx],"bo",fillstyle="none")
-        else
-            # Dew point
-            semilogx(Vmax,resultT[i][idx],"rx")
-        end
-        Vmin = minimum(resultV[i])
-        idx  = indmin(resultV[i])
-        # Check if Vmin is a bubble or a dew point
-        if resultX[1][i][idx]/Vmin > 0.5
-            semilogx(Vmin,resultT[i][idx],"bo",fillstyle="none")
-        else
-            semilogx(Vmin,resultT[i][idx],"rx")
-        end
         # Calculate entropy
         for j in 1:length(resultV[i])
             V = resultV[i][j]
@@ -106,23 +83,21 @@ for i in 1:length(resultV)
         end
     end
 end
-xlabel(L"$V\quad\left[\SI{}{\cubic\meter}\right]$")
-ylabel(L"$T\quad\left[\SI{}{\kelvin}\right]$")
-legend(["Dew points", "Bubble points"])
-xlim([1e-5,1e-2])
-printfig(fig, filename="../fig/TV.tex")
-close()
 
-# Plot the volume-entropy diagram for different isotherms
-fig = figure()
-isotherms = Float64[170,180,190,200,210]
+# Save results
+using HDF5, JLD, MAT
 
-for i = 1:length(resultT)
-    if in(resultT[i][1],isotherms)
-        semilogx(resultV[i],resultS[i])
-    end
+c = jldopen("results.jld", "w") do file
+    write(file, "T", resultT)
+    write(file, "V", resultV)
+    write(file, "X", resultX)
+    write(file, "S", resultS)
 end
 
-xlabel(L"$V\quad\left[\SI{}{\cubic\meter}\right]$")
-ylabel(L"$S\quad\left[\SI{}{\joule\per\kelvin\per\mole}\right]$")
-printfig(fig, filename="../fig/VS.tex")
+c = matopen("results.mat", "w") do file
+    write(file, "T", resultT)
+    write(file, "V", resultV)
+    write(file, "X", resultX)
+    write(file, "S", resultS)
+end
+
