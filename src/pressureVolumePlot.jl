@@ -15,7 +15,7 @@ end
 
 fig = plt.figure()
 
-semilogx(V_l, p_v, "g")
+semilogx(V_l, p_v, "g", linewidth=2)
 
 V_l = 1.1dot(n_l, b)
 V_v = 3e-4 - V_l
@@ -32,9 +32,9 @@ for i in 1:length(V_v)
     p_l[i] = pressure(T, V_l[i], n_l)
 end
 
-semilogx(V_l, p_l, "b")
-semilogx(V_v, p_v, "r")
-semilogx(V_l, ones(length(V_l))*pressure(T, x_v[1], x_v[2:end]),"k:")
+semilogx(V_l, p_l, "b", linewidth=2)
+semilogx(V_v, p_v, "r", linewidth=2)
+semilogx(V_l, ones(length(V_l))*pressure(T, x_v[1], x_v[2:end]),"k:", linewidth=2)
 
 legend([L"$p^\mathrm{l,v},\quad\mathbf{n}^\mathrm{l,v} = \frac{1}{2}\mathbf{n}$",
         L"$p^\mathrm{l},\quad\mathbf{n}^\mathrm{l} = \mathbf{n}^\mathrm{l,eq}$",
@@ -43,5 +43,5 @@ legend([L"$p^\mathrm{l,v},\quad\mathbf{n}^\mathrm{l,v} = \frac{1}{2}\mathbf{n}$"
 xlabel(L"$V\quad\left[\SI{}{\cubic\meter}\right]$")
 ylabel(L"$p\quad\left[\SI{}{\pascal}\right]$")
 printfig(fig, filename="../fig/pV.tex")
-ylim([0, 1e7])
+ylim([0, 4e6])
 printfig(fig, filename="../fig/pVzoom.tex")

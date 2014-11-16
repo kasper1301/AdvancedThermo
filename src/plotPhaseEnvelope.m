@@ -1,5 +1,3 @@
-path(genpath('~/.matlab'),path)
-
 dewPoints    = importdata('../data/dewPoints.csv');
 bubblePoints = importdata('../data/bubblePoints.csv');
 
@@ -22,10 +20,80 @@ bubbleV = m_tot./bubbleRho;
 semilogx(dewV,dewT,'bo')
 hold on
 semilogx(bubbleV,bubbleT,'rx')
-legend({'Dew points','Bubble points'})
+legend({'Experimental dew points','Experimental bubble points'})
 
 xlabel('$V\quad\left[\SI{}{\cubic\meter}\right]$')
 ylabel('$T\quad\left[\SI{}{\kelvin}\right]$')
 matlab2tikz('../fig/TVexperimental.tex','parseStrings',false)
 
-exit
+load('results.mat')
+
+clear dewV bubbleV
+dewV = [];
+dewT = [];
+bubbleV = [];
+bubbleT = [];
+
+for i = 1:length(V)
+    if isempty(V{i})
+        continue
+    end
+    [Vmax, idx] = max(V{i});
+    if X{1}{i}(idx)/Vmax > .99
+        % Dew point
+        dewV = [dewV; Vmax];
+        dewT = [dewT; T{i}(idx)];
+    elseif X{1}{i}(idx)/Vmax < .01
+        % Bubble point
+        bubbleV = [bubbleV; Vmax];
+        bubbleT = [bubbleT; T{i}(idx)];
+    end
+    [Vmin, idx] = min(V{i});
+    if X{1}{i}(idx)/Vmin > .99
+        % Dew point
+        dewV = [dewV; Vmin];
+        dewT = [dewT; T{i}(idx)];
+    elseif X{1}{i}(idx)/Vmin < .01
+        % Bubble point
+        bubbleV = [bubbleV; Vmin];
+        bubbleT = [bubbleT; T{i}(idx)];
+    end
+end
+[dewV, idx] = sort(dewV);
+dewT = dewT(idx);
+[bubbleV, idx] = sort(bubbleV);
+bubbleT = bubbleT(idx);
+
+semilogx(dewV, dewT, 'b', 'LineWidth', 2)
+semilogx(bubbleV, bubbleT, 'r', 'LineWidth', 2)
+
+legend({'Experimental dew points','Experimental bubble points',...
+        'Calculated dew curve','Calculated bubble curve'},...
+        'Location', 'SouthEast')
+    
+matlab2tikz('../fig/TV.tex','parseStrings',false)
+close all
+%%
+Tvec = zeros(length(T),1);
+for i = 1:length(T)
+    Tvec(i) = T{i}(1);
+end
+[Tvec,Tidx] = sort(Tvec);
+
+color = jet(length(Tidx));
+
+legendstring = {};
+
+for j = 1:length(Tidx)
+    i = Tidx(j);
+    [Vi, idx] = sort(V{i});
+    Si = S{i}(idx);
+    semilogx(Vi,Si,'Color',color(j,:),'LineWidth', 2)
+    legendstring{j} = ['$T = \SI{', num2str(Tvec(j)), '}{\kelvin}$'];
+    hold on
+end
+legend(legendstring, 'Location', 'EastOutside')
+xlabel('$V\quad\left[\SI{}{\cubic\meter}\right]$')
+ylabel('$S\eos\quad\left[\SI{}{\joule\per\kelvin\per\mole}\right]$')
+matlab2tikz('../fig/SV.tex','parseStrings',false)
+
