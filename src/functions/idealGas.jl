@@ -28,9 +28,8 @@
         idealHessian            :   The Hessian matrix for Helmholtz' energy of 
                                     an ideal gas. Based on volume and mole 
                                     vector only, temperature is given.
-
-    TODO: Support for DIPPR heat capacity functions
 =#
+
 function integrateCp(T::Float64)
     #=
     Integrate the cp from T_ref to T

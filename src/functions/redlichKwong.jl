@@ -16,9 +16,25 @@
     Requires the idealGas functions to calculate the properties
 
     Functions:
-        
-
-    TODO: Support for DIPPR heat capacity functions
+        redlichKwongB               :   Hard sphere volume B
+        redlichKwongA               :   Redlich-Kwong parameter A
+        residualHelmholtz           :   Residual Helmholtz energy
+        residualEntropy             :   Residual entropy
+        residualChemicalPotential   :   Residual chemical potential
+        Helmholtz                   :   Helmholtz energy
+        Enthalpy                    :   Enthalpy
+        Entropy                     :   Entropy
+        chemicalPotential           :   Chemical potential
+        pressure                    :   pressure
+        residualHessian             :   d2A^rv/d(V,n)d(V,n)
+        Hessian                     :   d2A/d(V,n)d(V,n)
+        Arv_T_T                     :   d2A^rv/dT2
+        Arv_T_V                     :   d2A^rv/dTdV
+        Arv_T_n                     :   d2A^rv/dTdn
+        Arv_V_V                     :   d2A^rv/dVdV
+        Arv_n_V                     :   d2A^rv/dndV
+        Arv_n_V                     :   d2A^rv/dndV
+        Arv_n_n                     :   d2A^rv/dndn
 =#
 
 # Parameters A and B
