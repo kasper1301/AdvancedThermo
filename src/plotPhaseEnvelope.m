@@ -1,3 +1,5 @@
+clear all
+close all
 dewPoints    = importdata('../data/dewPoints.csv');
 bubblePoints = importdata('../data/bubblePoints.csv');
 
@@ -24,7 +26,7 @@ legend({'Experimental dew points','Experimental bubble points'})
 
 xlabel('$V\quad\left[\SI{}{\cubic\meter}\right]$')
 ylabel('$T\quad\left[\SI{}{\kelvin}\right]$')
-matlab2tikz('../fig/TVexperimental.tex','parseStrings',false)
+matlab2tikz('../fig/TVexperimental.tex','parseStrings',false, 'width', '\textwidth')
 
 load('results.mat')
 
@@ -71,9 +73,9 @@ legend({'Experimental dew points','Experimental bubble points',...
         'Calculated dew curve','Calculated bubble curve'},...
         'Location', 'SouthEast')
     
-matlab2tikz('../fig/TV.tex','parseStrings',false)
-close all
+matlab2tikz('../fig/TV.tex','parseStrings',false, 'width', '\textwidth')
 %%
+close all
 Tvec = zeros(length(T),1);
 for i = 1:length(T)
     Tvec(i) = T{i}(1);
@@ -84,16 +86,20 @@ color = jet(length(Tidx));
 
 legendstring = {};
 
-for j = 1:length(Tidx)
+for j = 1:floor(length(Tidx)/10):length(Tidx)
     i = Tidx(j);
     [Vi, idx] = sort(V{i});
     Si = S{i}(idx);
+    idx = 1:floor(length(Vi)/100):length(Vi);
+    Vi = Vi(idx);
+    Si = Si(idx);
     semilogx(Vi,Si,'Color',color(j,:),'LineWidth', 2)
-    legendstring{j} = ['$T = \SI{', num2str(Tvec(j)), '}{\kelvin}$'];
+    legendstring = {legendstring{:}, ['$T = \SI{', num2str(Tvec(j)), '}{\kelvin}$']};
     hold on
 end
 legend(legendstring, 'Location', 'EastOutside')
 xlabel('$V\quad\left[\SI{}{\cubic\meter}\right]$')
 ylabel('$S\eos\quad\left[\SI{}{\joule\per\kelvin\per\mole}\right]$')
-matlab2tikz('../fig/SV.tex','parseStrings',false)
+axis tight
+matlab2tikz('../fig/SV.tex','parseStrings', 'width', '\textwidth')
 
