@@ -37,8 +37,8 @@ resultV = {Float64[]}                                # Array for storing volumes
 resultX = {{Float64[]} for i in x}              # Arrays for storing vapor state
 
 trace   = 1                                                       # Trace number
-dV      = 1.0005        # The volume is updated by multiplication/division by dV
-dT      = 3.0          # The temperature is update by addition/subtraction of dT
+dV      = 1.0001        # The volume is updated by multiplication/division by dV
+dT      = 1.0          # The temperature is update by addition/subtraction of dT
 
 while true
     try
@@ -100,4 +100,3 @@ c = matopen("results.mat", "w") do file
     write(file, "X", resultX)
     write(file, "S", resultS)
 end
-
