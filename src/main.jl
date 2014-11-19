@@ -15,7 +15,7 @@ The solution strategy:
 
 # Obtain initial solution
 const n = [1.60; 94.50; 2.60; 0.81; 0.52]/100.03             # Total composition
-initT   = 46.0                                            # Initial temperature
+initT   = 100.0                                            # Initial temperature
 initV   = 3e-4                                                  # Initial volume
 n_v     = 1e-4n                                     # Guess for vapor composition
 n_l     = n - n_v                                           # Liquid composition
@@ -38,15 +38,18 @@ resultX = {{Float64[]} for i in x}              # Arrays for storing vapor state
 
 trace   = 1                                                       # Trace number
 dV      = 1.0001        # The volume is updated by multiplication/division by dV
-dT      = 1.0          # The temperature is update by addition/subtraction of dT
-
-while true
+dT0     = 0.5          # The temperature is update by addition/subtraction of dT
+dT      = dT0
+while T < 180.0
     try
         include("tempLoop.jl")
     catch
-        println("Done with increasing temperature")
-        break
+        #println("Done with increasing temperature")
+        #break
+        dT /= 2
+        T  -= dT
     end
+    dT = dT0
 end
 
 # Prepare array for storing the entropy
@@ -84,4 +87,4 @@ c = matopen("results.mat", "w") do file
     write(file, "X", resultX)
     write(file, "S", resultS)
 end
-=#
+
