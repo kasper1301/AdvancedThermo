@@ -2,3 +2,6 @@
 *.bak
 *.png
 *.tex
+*.tikz
+*.jld
+*.mat
