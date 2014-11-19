@@ -40,7 +40,7 @@ trace   = 1                                                       # Trace number
 dV      = 1.0001        # The volume is updated by multiplication/division by dV
 dT0     = 0.5          # The temperature is update by addition/subtraction of dT
 dT      = dT0
-while T < 180.0
+while T < 212.0
     try
         include("tempLoop.jl")
     catch
