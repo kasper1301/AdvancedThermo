@@ -26,6 +26,7 @@ legend({'Experimental dew points','Experimental bubble points'})
 
 xlabel('$V\quad\left[\SI{}{\cubic\meter}\right]$')
 ylabel('$T\quad\left[\SI{}{\kelvin}\right]$')
+set(gcf, 'Position', [0 0 1920/2 1080])
 matlab2tikz('../fig/TVexperimental.tex','parseStrings',false, 'width', '\textwidth')
 
 load('results.mat')
@@ -45,7 +46,7 @@ for i = 1:length(V)
         % Dew point
         dewV = [dewV; Vmax];
         dewT = [dewT; T{i}(idx)];
-    elseif X{1}{i}(idx)/Vmax < .01
+    elseif X{1}{i}(idx)/Vmax < .01 && Vmax < 1e-2
         % Bubble point
         bubbleV = [bubbleV; Vmax];
         bubbleT = [bubbleT; T{i}(idx)];
@@ -61,6 +62,8 @@ for i = 1:length(V)
         bubbleT = [bubbleT; T{i}(idx)];
     end
 end
+
+
 [dewV, idx] = sort(dewV);
 dewT = dewT(idx);
 [bubbleV, idx] = sort(bubbleV);
@@ -71,10 +74,13 @@ semilogx(bubbleV, bubbleT, 'r', 'LineWidth', 2)
 
 legend({'Experimental dew points','Experimental bubble points',...
         'Calculated dew curve','Calculated bubble curve'},...
-        'Location', 'SouthEast')
+        'Location', 'NorthEast')
+    
+set(gcf, 'Position', [0 0 1920/2 1080])
     
 matlab2tikz('../fig/TV.tex','parseStrings',false, 'width', '\textwidth')
 %%
+load('resultsFine.mat')
 close all
 Tvec = zeros(length(T),1);
 for i = 1:length(T)
@@ -86,7 +92,7 @@ color = jet(length(Tidx));
 
 legendstring = {};
 
-for j = 1:floor(length(Tidx)/10):length(Tidx)
+for j = 2:2:(length(Tidx)-1)
     i = Tidx(j);
     [Vi, idx] = sort(V{i});
     Si = S{i}(idx);
@@ -101,5 +107,6 @@ legend(legendstring, 'Location', 'EastOutside')
 xlabel('$V\quad\left[\SI{}{\cubic\meter}\right]$')
 ylabel('$S\eos\quad\left[\SI{}{\joule\per\kelvin\per\mole}\right]$')
 axis tight
-matlab2tikz('../fig/SV.tex','parseStrings', 'width', '\textwidth')
+set(gcf, 'Position', [0 0 1920/2 1080])
+matlab2tikz('../fig/SV.tex','parseStrings',false, 'width', '\textwidth')
 

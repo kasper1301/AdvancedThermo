@@ -6,7 +6,7 @@
             x[1] = V
             println("V: $V")
             x_v  = equilibrium(T, x_v, x)                    # Solve equilibrium
-            saveState(T, V, x_v, resultT, resultV, resultX, trace) # Save result
+            saveState!(T, V, x_v, resultT, resultV, resultX, trace) # Save result
         catch
             warn("Vapor volume fraction: $(x_v[1]/V)")
             break
@@ -23,7 +23,7 @@
             x[1] = V
             println("V: $V")
             x_v  = equilibrium(T, x_v, x)                    # Solve equilibrium
-            saveState(T, V, x_v, resultT, resultV, resultX, trace) # Save result
+            saveState!(T, V, x_v, resultT, resultV, resultX, trace) # Save result
         catch
             warn("Vapor volume fraction: $(x_v[1]/V)")
             break
